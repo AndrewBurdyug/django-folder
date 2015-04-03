@@ -10,8 +10,15 @@ var service_ok_urls = {
 }
 
 var format_error_msg = function(data){
-    $.each(key, value)
+    var formated_errors = '<dl class="dl-horizontal">';
+    $.each(data, function(key, value){
+        formated_errors += '<dt>' + key + '</dt>';
+        formated_errors += '<dd>' + value + '</dd>';
+    });
+    formated_errors += '</dl>';
+    return formated_errors;
 }
+
 
 var send_data = function(service_type, data){
     $.ajax({
@@ -28,7 +35,7 @@ var send_data = function(service_type, data){
             home_url = window.location.origin + service_ok_urls[service_type];
             window.location.replace(home_url);
         } else {
-            $('#fail_reason').html(backend_response.info);
+            $('#fail_reason').html(format_error_msg(backend_response.info));
             $('#fail_' + service_type + '_alert').fadeIn(800).delay(1500).fadeOut(2000);
         }
     });

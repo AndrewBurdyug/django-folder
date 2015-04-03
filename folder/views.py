@@ -7,6 +7,7 @@ from django.views.generic import View
 from django.conf import settings
 
 from folder.forms import FolderUserCreationFrom
+from folder.utils import dehydrate_validation_errors
 
 FOLDER_SIGNUP_ENABLED = True
 if hasattr(settings, 'FOLDER_SIGNUP_ENABLED'):
@@ -35,13 +36,13 @@ class FolderLogin(View):
             if user.is_active:
                 login(request, user)
                 return JsonResponse({'status': 'OK',
-                                     'info': 'User is active'})
+                                     'info': {'username': 'User is active'}})
             else:
                 return JsonResponse({'status': 'ERROR',
-                                     'info': 'User inactive'})
+                                     'info': {'username': 'User inactive'}})
         else:
             return JsonResponse({'status': 'ERROR',
-                                 'info': 'Invalid login'})
+                                 'info': {'username/password': 'Invalid'}})
 
 
 class FolderLogout(View):
@@ -67,8 +68,11 @@ class FolderSignup(View):
             return JsonResponse({'status': 'OK',
                                  'info': 'Registered'})
         else:
+            validation_errors = dehydrate_validation_errors(
+                form.errors.as_data()
+            )
             return JsonResponse({'status': 'ERROR',
-                                 'info': '%s' % form.errors})
+                                 'info': validation_errors})
 
 
 class FolderHome(View):

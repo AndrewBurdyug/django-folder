@@ -21,6 +21,10 @@
             </form>
         </div>
     </div>
-    <div id="fail_login_alert" class="alert alert-danger" role="alert" style="display:none"><p class="text-center">Не удалось авторизоваться!</p><p id="fail_reason" class="text-center"></p></div>
+    <div id="fail_login_alert" class="alert alert-danger alert-dismissible" role="alert" style="display:none">
+        <h4 class="text-center">Не удалось авторизоваться!</h4>
+        <p>Причина:</p>
+        <p id="fail_reason"></p>
+    </div>
 </div>
 {% endblock %}
