@@ -6,8 +6,9 @@ from django.contrib.auth.models import Permission
 from django.views.generic import View
 from django.conf import settings
 
-from folder.forms import FolderUserCreationFrom
-from folder.utils import dehydrate_validation_errors
+from folder.forms import FolderUserCreationFrom, UploadFileForm
+from folder.utils import dehydrate_validation_errors, handle_uploaded_file
+from folder.errors import BadData
 
 FOLDER_SIGNUP_ENABLED = True
 if hasattr(settings, 'FOLDER_SIGNUP_ENABLED'):
@@ -66,7 +67,7 @@ class FolderSignup(View):
             new_user = form.save()
             new_user.user_permissions.add(*extra_permissions)
             return JsonResponse({'status': 'OK',
-                                 'info': 'Registered'})
+                                 'info': {'username': 'Registered'}})
         else:
             validation_errors = dehydrate_validation_errors(
                 form.errors.as_data()
@@ -78,8 +79,27 @@ class FolderSignup(View):
 class FolderHome(View):
     template_name = 'folder/home.html'
 
-    def get(self, request):
-        return render(request, self.template_name)
+    def get(self, request, extra_context={}):
+        form = UploadFileForm()
+        context = {'form': form, 'user': request.user}
+        context.update(csrf(request))
+        if extra_context:
+            context.update(extra_context)
+        return render_to_response(self.template_name, context)
 
     def post(self, request):
-        pass
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                info = handle_uploaded_file(request.FILES['data'])
+                return JsonResponse({'status': 'OK',
+                                     'info': info})
+            except BadData as er:
+                return JsonResponse({'status': 'ERROR',
+                                     'info': {'data': '%s' % er}})
+        else:
+            validation_errors = dehydrate_validation_errors(
+                form.errors.as_data()
+            )
+            return JsonResponse({'status': 'ERROR',
+                                 'info': validation_errors})
