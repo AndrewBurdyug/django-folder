@@ -1,5 +1,19 @@
 {% extends "folder/base.html" %}
 
+{% block "header" %}
+    {% include "folder/header.html" %}
+{% endblock %}
+
 {% block "content" %}
 
+
+<div id="greeting" class="col-sm-4 col-sm-offset-4">
+    <p class="lead text-center">Привет, {{user}}!</p>
+    <p class="lead text-center">У Вас нет ни одного загруженного файла!</p>
+    <p class="text-center">
+    <button id="center_upload_btn" type="submit" class="btn btn-primary btn-lg btn-block">
+            <i class="fa fa-cloud-upload fa-2x fa-fw"></i><h4>Загрузить Файл</h4>
+    </button>
+    </p>
+</div>
 {% endblock %}
