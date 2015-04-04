@@ -1,6 +1,7 @@
 var csrftoken = '';
 var file = '';
 var ajax_extra_options = {};
+var delete_url = '';
 var pnotify_options =  {
     delay: 2000,
     stack: {"dir1": "down", "dir2": "right", "push": "top"}
@@ -15,7 +16,8 @@ var check_http_method = function(method){
 var service_ok_urls = {
     'login': '/folder/home/',
     'signup': '/folder/login/',
-    'home': '/folder/home/'
+    'home': '/folder/home/',
+    'delete': '/folder/home/'
 }
 
 var format_error_msg = function(data){
@@ -131,4 +133,26 @@ $(function() {
     $('#upload_dialog').on('hidden.bs.modal', function(){
         location.reload();
     });
+
+    $('.delete_file').click(function(event){
+        event.preventDefault();
+        var elem = $(this);
+        delete_url = elem.attr('href');
+        var file_name = elem.attr('name');
+        $('#file_to_delete').text('Вы уверены, что хотите удалить файл "' + file_name +'" ?');
+        $('#delete_dialog').modal('show');
+    });
+
+    $('#delete_file_no').click(function(event){
+        event.preventDefault();
+        $('#delete_dialog').modal('hide');
+    });
+
+    $('#delete_file_yes').click(function(event){
+        event.preventDefault();
+        $.extend(ajax_extra_options, {'url': delete_url});
+        send_data('delete', {})
+        ajax_extra_options = {};
+    });
+
 });

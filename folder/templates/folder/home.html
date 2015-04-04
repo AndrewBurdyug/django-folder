@@ -28,7 +28,7 @@
             <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
             <p>
                 <a href="/folder/download/{{file.pk}}" class="btn btn-default" role="button">Скачать</a>
-                <a href="/folder/delete/{{file.pk}}" class="btn btn-danger" role="button">Удалить</a>
+                <a href="/folder/delete/{{file.pk}}" class="btn btn-danger delete_file" role="button" name="{{file.name}}">Удалить</a>
             </p>
           </div>
         </div>
@@ -38,5 +38,7 @@
 {% endif %}
 
 {% include "folder/upload.html" %}
+
+{% include "folder/delete.html" %}
 
 {% endblock %}
