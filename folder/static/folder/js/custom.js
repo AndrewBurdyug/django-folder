@@ -105,7 +105,7 @@ $(function() {
         window.location.replace(signup_url);
     });
 
-    $('#center_upload_btn').click(function(event){
+    $('#center_upload_btn, #header_upload_btn').click(function(event){
         event.preventDefault();
         $('#upload_dialog').modal('show');
     });
@@ -126,5 +126,9 @@ $(function() {
 
     $('#id_data').change(function(event) {
         file = event.target.files[0];
+    });
+
+    $('#upload_dialog').on('hidden.bs.modal', function(){
+        location.reload();
     });
 });

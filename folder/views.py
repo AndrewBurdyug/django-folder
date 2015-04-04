@@ -9,6 +9,7 @@ from django.conf import settings
 from folder.forms import FolderUserCreationFrom, UploadFileForm
 from folder.utils import dehydrate_validation_errors, handle_uploaded_file
 from folder.errors import BadData
+from folder.models import FileLink
 
 FOLDER_SIGNUP_ENABLED = True
 if hasattr(settings, 'FOLDER_SIGNUP_ENABLED'):
@@ -81,7 +82,8 @@ class FolderHome(View):
 
     def get(self, request, extra_context={}):
         form = UploadFileForm()
-        context = {'form': form, 'user': request.user}
+        context = {'form': form, 'user': request.user,
+                   'files': FileLink.objects.filter(owner=request.user)}
         context.update(csrf(request))
         if extra_context:
             context.update(extra_context)
@@ -91,7 +93,8 @@ class FolderHome(View):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                info = handle_uploaded_file(request.FILES['data'])
+                info = handle_uploaded_file(request.FILES['data'],
+                                            request.user)
                 return JsonResponse({'status': 'OK',
                                      'info': info})
             except BadData as er:
