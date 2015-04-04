@@ -3,13 +3,16 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Django Folder</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form id="quit" class="navbar-form" action="/folder/logout">
-                    <a id="profile_name" href="#profile" class="hidden-xs hidden-sm"><i class="fa fa-user fa-fw"></i> {{user}}</a>
-                    <button type="submit" class="btn btn-sm btn-default">Выход</button>
-                </form>
-            </li>
-        </ul>
+        <div class="nav navbar-nav">
+               <a id="profile_name" class="navbar-brand" href="#profile"><i class="fa fa-user fa-fw"></i> {{user}}</a>
+               {% if files %}
+               <a id="header_upload_btn" class="navbar-brand" href="#"><i class="fa fa-cloud-upload fa-fw"></i> Загрузить Файл</a>
+               {% endif %}
+        </div>
+        <div class="nav navbar-nav navbar-right">
+            <form id="quit" class="navbar-form" action="/folder/logout">
+                <button type="submit" class="btn btn-default">Выход</button>
+            </form>
+        </div>
     </div>
 </nav>
