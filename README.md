@@ -293,6 +293,6 @@ server {
 }
 ```
 
-__Coding:__
+__Developer/Sysadmin:__
 
 2015, Andrew Burdyug
