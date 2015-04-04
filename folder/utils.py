@@ -54,12 +54,12 @@ def handle_uploaded_file(f, user):
         for chunk in tmp_f.read(128):
             md5sum.update(chunk)
 
+    owners = {}
     file_md5sum = md5sum.hexdigest()
     file_obj, created = File.objects.get_or_create(md5sum=file_md5sum,
                                                    size=f.size)
     FileLink.objects.get_or_create(name=f.name, target=file_obj, owner=user)
     if created:
-        # owners = {x.owner for x in file_obj.filelinks.all()}
 
         # add content-type
         file_content_type, created = FileContentType.objects\
@@ -70,7 +70,9 @@ def handle_uploaded_file(f, user):
         # remove temp file
         shutil.move(tmp_filename, file_obj.name)
     else:
+        owners = {x.owner.username: x.name for x in file_obj.filelinks.all()
+                  if x.owner != user}
         os.remove(tmp_filename)
 
-    info = dict(size=f.size, name=f.name, created=created)
+    info = dict(size=f.size, name=f.name, created=created, owners=owners)
     return info

@@ -2,10 +2,6 @@ var csrftoken = '';
 var file = '';
 var ajax_extra_options = {};
 var delete_url = '';
-var pnotify_options =  {
-    delay: 2000,
-    stack: {"dir1": "down", "dir2": "right", "push": "top"}
-}
 
 PNotify.prototype.options.styling = "fontawesome";
 
@@ -50,26 +46,37 @@ var send_data = function(service_type, data){
     $.ajax(options).done(function(backend_response){
         if (backend_response.status == 'OK'){
             if (service_type == 'home') {
-                new PNotify(
-                    $.extend({
+                new PNotify({
+                        delay: 4000,
                         type: 'success',
                         title: 'Статус операции',
-                        text: 'Файл <strong>' + backend_response.info.name + '</strong> успешно загружен!'
-                    }, pnotify_options)
-                );
+                        text: 'Файл <strong>"' + backend_response.info.name + '"</strong> успешно загружен!'
+                    });
+
+                if(backend_response.info.created == false && Object.getOwnPropertyNames(backend_response.info.owners).length != 0){
+                    var file_info = 'Этот файл также есть у';
+                    for(var username in backend_response.info.owners) {
+                        file_info += ' <strong>' + username + '</strong> с названием <strong>"' + backend_response.info.owners[username] + '"</strong>';
+                    }
+                new PNotify({
+                        delay: 4000,
+                        type: 'info',
+                        title: 'Найден Дубликат',
+                        text: file_info
+                    });
+                }
             } else {
                 home_url = window.location.origin + service_ok_urls[service_type];
                 window.location.replace(home_url);
             }
         } else {
             if (service_type == 'home') {
-                new PNotify(
-                    $.extend({
+                new PNotify({
+                        delay: 4000,
                         type: 'error',
                         title: 'Статус операции',
                         text: 'Ошибка: <strong>' + JSON.stringify(backend_response.info) + '</strong>'
-                    }, pnotify_options)
-                );
+                    });
             } else {
                 $('#fail_reason').html(format_error_msg(backend_response.info));
                 $('#fail_' + service_type + '_alert').fadeIn(800).delay(1500).fadeOut(2000);
