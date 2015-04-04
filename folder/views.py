@@ -240,6 +240,6 @@ class FolderAnonymousGetSharedLink(View):
 
         with open(file_path, 'rb') as f:
             response = HttpResponse(f, content_type=file_content_type)
-            response['Content-Disposition'] = 'attachment; filename="%s"' % \
+            response['Content-Disposition'] = 'filename="%s"' % \
                 file_name
             return response
