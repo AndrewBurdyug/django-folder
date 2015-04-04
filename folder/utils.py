@@ -36,7 +36,7 @@ def handle_uploaded_file(f, user):
     - check if count of user files < FOLDER_MAX_USER_FILES
     - deduplication
     """
-    print vars(f)
+
     if f.size >= FOLDER_MAX_FILE_SIZE:
         raise BadFileSize(f.name, f.size, FOLDER_MAX_FILE_SIZE)
 
