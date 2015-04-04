@@ -191,4 +191,11 @@ $(function() {
         ajax_extra_options = {};
     });
 
+    $('.download_file').click(function(){
+        var elem = $(this);
+        create_url = '/folder/create_shared_link/' + elem.attr('name');
+        $.extend(ajax_extra_options, {'url': create_url, 'method': 'GET', 'async': false});
+        send_data('create_shared_link', {});
+        ajax_extra_options = {};
+    });
 });
