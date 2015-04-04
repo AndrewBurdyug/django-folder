@@ -4,12 +4,16 @@ import hashlib
 import shutil
 
 from django.conf import settings
-from folder.errors import BadData
+from folder.errors import BadFileSize, TooMuchFiles
 from folder.models import File, FileLink
 
 FOLDER_MAX_FILE_SIZE = 1024 * 1024 * 2
 if hasattr(settings, 'FOLDER_MAX_FILE_SIZE'):
     FOLDER_MAX_FILE_SIZE = settings.FOLDER_MAX_FILE_SIZE
+
+FOLDER_MAX_USER_FILES = 100
+if hasattr(settings, 'FOLDER_MAX_USER_FILES'):
+    FOLDER_MAX_USER_FILES = settings.FOLDER_MAX_USER_FILES
 
 
 def dehydrate_validation_errors(errors_data):
@@ -27,11 +31,18 @@ def dehydrate_validation_errors(errors_data):
 
 
 def handle_uploaded_file(f, user):
-    """
+    """Main logic:
+    - check if uploaded file size < FOLDER_MAX_FILE_SIZE
+    - check if count of user files < FOLDER_MAX_USER_FILES
+    - deduplication
     """
 
     if f.size >= FOLDER_MAX_FILE_SIZE:
-        raise BadData('size', f.size)
+        raise BadFileSize(f.name, f.size, FOLDER_MAX_FILE_SIZE)
+
+    user_files_count = FileLink.objects.filter(owner=user).count()
+    if user_files_count >= FOLDER_MAX_USER_FILES:
+        raise TooMuchFiles(user_files_count, FOLDER_MAX_USER_FILES)
 
     tmp_filename = '/tmp/dfolder_%d_%s' % (user.pk, uuid.uuid4())
     with open(tmp_filename, 'wb+') as destination:

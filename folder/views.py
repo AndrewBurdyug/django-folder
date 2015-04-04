@@ -8,7 +8,7 @@ from django.conf import settings
 
 from folder.forms import FolderUserCreationFrom, UploadFileForm
 from folder.utils import dehydrate_validation_errors, handle_uploaded_file
-from folder.errors import BadData
+from folder.errors import BadFileSize, TooMuchFiles
 from folder.models import FileLink
 
 FOLDER_SIGNUP_ENABLED = True
@@ -97,7 +97,7 @@ class FolderHome(View):
                                             request.user)
                 return JsonResponse({'status': 'OK',
                                      'info': info})
-            except BadData as er:
+            except (BadFileSize, TooMuchFiles) as er:
                 return JsonResponse({'status': 'ERROR',
                                      'info': {'data': '%s' % er}})
         else:
