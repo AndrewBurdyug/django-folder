@@ -1,7 +1,9 @@
 import os
 import uuid
-import hashlib
+import string
+import random
 import shutil
+import hashlib
 
 from django.conf import settings
 from folder.errors import BadFileSize, TooMuchFiles
@@ -76,3 +78,9 @@ def handle_uploaded_file(f, user):
 
     info = dict(size=f.size, name=f.name, created=created, owners=owners)
     return info
+
+
+def generate_random_phrase():
+    """Generate random strings like [a-zA-Z]{10}"""
+
+    return "".join(random.sample(string.ascii_letters, 10))

@@ -13,7 +13,9 @@ var service_ok_urls = {
     'login': '/folder/home/',
     'signup': '/folder/login/',
     'home': '/folder/home/',
-    'delete': '/folder/home/'
+    'delete': '/folder/home/',
+    'delete_shared_link': '',
+    'create_shared_link': ''
 }
 
 var format_error_msg = function(data){
@@ -65,9 +67,15 @@ var send_data = function(service_type, data){
                         text: file_info
                     });
                 }
+            } else if (service_type == 'create_shared_link'){
+                $('#file_shared_link_op_' + backend_response.info.file_link_id).html(
+                    'Ссылка: <a href="/folder/shared/' + backend_response.info.shared_link + '"><small>' + backend_response.info.file_link_name + '</small></a><a href="#" name="' + backend_response.info.file_link_id + '" class="delete_shared_link"><i class="fa fa-trash-o fa-fw"></i></a>'
+                );
             } else {
-                home_url = window.location.origin + service_ok_urls[service_type];
-                window.location.replace(home_url);
+                if (service_ok_urls[service_type]) {
+                    home_url = window.location.origin + service_ok_urls[service_type];
+                    window.location.replace(home_url);
+                }
             }
         } else {
             if (service_type == 'home') {
@@ -159,6 +167,27 @@ $(function() {
         event.preventDefault();
         $.extend(ajax_extra_options, {'url': delete_url});
         send_data('delete', {})
+        ajax_extra_options = {};
+    });
+
+    $('.file_shared_link_operations').on('click', '.delete_shared_link', function(event){
+        event.preventDefault();
+        var elem = $(this);
+        delete_url = '/folder/delete_shared_link/' + elem.attr('name');
+        $.extend(ajax_extra_options, {'url': delete_url, 'method': 'GET'});
+        send_data('delete_shared_link', {});
+        ajax_extra_options = {};
+        $('#file_shared_link_op_' + elem.attr('name')).html(
+            '<a href="#" name="' + elem.attr('name') + '" class="create_shared_link"><i class="fa fa-link fa-fw"></i> Создать ссылку</a>'
+        );
+    });
+
+    $('.file_shared_link_operations').on('click', '.create_shared_link', function(event){
+        event.preventDefault();
+        var elem = $(this);
+        create_url = '/folder/create_shared_link/' + elem.attr('name');
+        $.extend(ajax_extra_options, {'url': create_url, 'method': 'GET'});
+        send_data('create_shared_link', {});
         ajax_extra_options = {};
     });
 

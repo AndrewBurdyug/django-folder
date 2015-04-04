@@ -32,6 +32,8 @@ class FileLink(models.Model):
     target = models.ForeignKey('File', related_name='filelinks')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               related_name='files')
+    shared = models.OneToOneField('FileSharedLink', related_name='filelink',
+                                  blank=True, null=True)
 
     def __unicode__(self):
         return 'Name: %s, Created: %s, Size: %d bytes' % (
@@ -43,6 +45,15 @@ class FileContentType(models.Model):
     """Content-Type of uploaded file"""
 
     name = models.CharField(max_length=128)
+
+    def __unicode__(self):
+        return self.name
+
+
+class FileSharedLink(models.Model):
+    """Anonymous shared link to user file"""
+
+    name = models.CharField(max_length=10, unique=True, db_index=True)
 
     def __unicode__(self):
         return self.name
