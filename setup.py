@@ -11,7 +11,8 @@ setup(
     version='0.1',
     packages=['folder'],
     install_requires=[
-        'django>=1.7.4,<1.8'
+        'django>=1.7.4,<1.8',
+        'uwsgi'
     ],
     include_package_data=True,
     license='Apach 2.0 License',
