@@ -113,7 +113,27 @@ class FolderHome(View):
 class FolderDeleteFile(View):
 
     def post(self, request, pk):
-        FileLink.objects.filter(owner=request.user, pk=pk).delete()
+        try:
+            file_link = FileLink.objects.get(owner=request.user, pk=pk)
+        except FileLink.DoesNotExists:
+            pass
+        else:
+            # delete user file_link (safe operation)
+            file_obj = file_link.target
+            file_link.delete()
+
+            # if file not has links - delete file
+            if not file_obj.filelinks.all():
+
+                # get physical path of file
+                file_path = file_obj.name
+
+                # if file exists - delete him
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+
+                file_obj.delete()
+
         return JsonResponse({'status': 'OK',
                              'info': {'file': 'Deleted'}})
 
