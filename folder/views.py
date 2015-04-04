@@ -106,3 +106,17 @@ class FolderHome(View):
             )
             return JsonResponse({'status': 'ERROR',
                                  'info': validation_errors})
+
+
+class FolderDeleteFile(View):
+
+    def post(self, request, pk):
+        FileLink.objects.filter(owner=request.user, pk=pk).delete()
+        return JsonResponse({'status': 'OK',
+                             'info': {'file': 'Deleted'}})
+
+
+class FolderGetFile(View):
+
+    def post(self, request, pk):
+        pass

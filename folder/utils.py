@@ -5,7 +5,7 @@ import shutil
 
 from django.conf import settings
 from folder.errors import BadFileSize, TooMuchFiles
-from folder.models import File, FileLink
+from folder.models import File, FileLink, FileContentType
 
 FOLDER_MAX_FILE_SIZE = 1024 * 1024 * 2
 if hasattr(settings, 'FOLDER_MAX_FILE_SIZE'):
@@ -36,7 +36,7 @@ def handle_uploaded_file(f, user):
     - check if count of user files < FOLDER_MAX_USER_FILES
     - deduplication
     """
-
+    print vars(f)
     if f.size >= FOLDER_MAX_FILE_SIZE:
         raise BadFileSize(f.name, f.size, FOLDER_MAX_FILE_SIZE)
 
@@ -60,6 +60,14 @@ def handle_uploaded_file(f, user):
     FileLink.objects.get_or_create(name=f.name, target=file_obj, owner=user)
     if created:
         # owners = {x.owner for x in file_obj.filelinks.all()}
+
+        # add content-type
+        file_content_type, created = FileContentType.objects\
+            .get_or_create(name=f.content_type)
+        file_obj.content_type = file_content_type
+        file_obj.save()
+
+        # remove temp file
         shutil.move(tmp_filename, file_obj.name)
     else:
         os.remove(tmp_filename)

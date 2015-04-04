@@ -13,10 +13,15 @@ class File(models.Model):
     md5sum = models.CharField(max_length=32, unique=True, db_index=True)
     created = models.DateField(auto_now_add=True)
     size = models.PositiveIntegerField()
+    content_type = models.ForeignKey('FileContentType', related_name='files',
+                                     blank=True, null=True)
 
     @property
     def name(self):
         return '%s/%s' % (FOLDER_STORAGE_PATH, self.md5sum)
+
+    def __unicode__(self):
+        return self.name
 
 
 class FileLink(models.Model):
@@ -32,3 +37,12 @@ class FileLink(models.Model):
         return 'Name: %s, Created: %s, Size: %d bytes' % (
             self.name, self.created.strftime('%d.%m.%Y %H:%M'),
             self.target.size)
+
+
+class FileContentType(models.Model):
+    """Content-Type of uploaded file"""
+
+    name = models.CharField(max_length=128)
+
+    def __unicode__(self):
+        return self.name
