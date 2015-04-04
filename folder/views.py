@@ -122,6 +122,8 @@ class FolderDeleteFile(View):
         else:
             # delete user file_link (safe operation)
             file_obj = file_link.target
+            if file_link.shared:
+                file_link.shared.delete()
             file_link.delete()
 
             # if file not has links - delete file
