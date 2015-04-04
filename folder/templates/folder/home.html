@@ -27,8 +27,8 @@
             <i class="fa fa-file-text-o fa-fw fa-2x"><h3>{{file.name|truncatechars:16}}</h3></i>
             <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
             <p>
-                <a href="#" class="btn btn-default" role="button">Скачать</a>
-                <a href="#" class="btn btn-danger" role="button">Удалить</a>
+                <a href="/folder/download/{{file.pk}}" class="btn btn-default" role="button">Скачать</a>
+                <a href="/folder/delete/{{file.pk}}" class="btn btn-danger" role="button">Удалить</a>
             </p>
           </div>
         </div>

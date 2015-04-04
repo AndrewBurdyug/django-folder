@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^logout/$', FolderLogout.as_view()),
     url(r'^home/$', login_required(FolderHome.as_view())),
     url(r'^delete/(?P<pk>\d+)$', login_required(FolderDeleteFile.as_view())),
-    url(r'^download/(?P<pk>\d+)$', FolderGetFile.as_view()),
+    url(r'^download/(?P<pk>\d+)$', login_required(FolderGetFile.as_view())),
 ]

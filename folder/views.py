@@ -1,6 +1,8 @@
+import os
+
 from django.shortcuts import render, render_to_response, redirect
 from django.core.context_processors import csrf
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission
 from django.views.generic import View
@@ -118,5 +120,21 @@ class FolderDeleteFile(View):
 
 class FolderGetFile(View):
 
-    def post(self, request, pk):
-        pass
+    def get(self, request, pk):
+        try:
+            file_link = FileLink.objects.get(owner=request.user, pk=pk)
+        except FileLink.DoesNotExists:
+            return redirect('/folder/home/')
+
+        file_path = file_link.target.name
+        file_content_type = file_link.target.content_type
+        file_name = file_link.name
+
+        if not os.path.isfile(file_path):
+            return redirect('/folder/home/')
+
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f, content_type=file_content_type)
+            response['Content-Disposition'] = 'attachment; filename="%s"' % \
+                file_name
+            return response
