@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 FOLDER_STORAGE_PATH = '/tmp'
-if hasattr(settings, FOLDER_STORAGE_PATH):
+if hasattr(settings, 'FOLDER_STORAGE_PATH'):
     FOLDER_STORAGE_PATH = settings.FOLDER_STORAGE_PATH
 
 
