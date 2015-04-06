@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-folder',
-    version='0.1',
+    version='0.1.1',
     packages=['folder'],
     install_requires=[
         'django>=1.7.4,<1.8',
