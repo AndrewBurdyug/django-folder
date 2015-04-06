@@ -45,6 +45,7 @@ __Setup virtual enviroment__:
 ```shell
 $ sudo apt-get install python python-dev python-virtualenv git
 $ virtualenv ~/py2
+$ . ~/py2/bin/activate
 $ pip install -U setuptools argparse pip
 ```
 
