@@ -60,7 +60,7 @@ or if you do not have git:
 
 ```shell
 $ . ~/py2/bin/activate
-$ pip install http://pkg.chalenge.tk/django-folder-0.1.tar.gz
+$ pip install http://pkg.chalenge.tk/django-folder-latest.tar.gz
 ```
 
 How-to use:
