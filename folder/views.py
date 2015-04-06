@@ -152,7 +152,7 @@ class FolderGetFile(View):
 
         file_path = file_link.target.name
         file_content_type = file_link.target.content_type
-        file_name = file_link.name
+        file_name = file_link.name.encode('utf-8')
 
         if not os.path.isfile(file_path):
             return redirect('/folder/home/')
@@ -235,7 +235,7 @@ class FolderAnonymousGetSharedLink(View):
         # !!! refactoring needed: below code from FolderGetFile !!!
         file_path = file_link.target.name
         file_content_type = file_link.target.content_type
-        file_name = file_link.name
+        file_name = file_link.name.encode('utf-8')
 
         if not os.path.isfile(file_path):
             return redirect('/folder/home/')
