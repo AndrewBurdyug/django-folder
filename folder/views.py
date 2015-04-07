@@ -2,7 +2,7 @@ import os
 
 from django.shortcuts import render, render_to_response, redirect
 from django.core.context_processors import csrf
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission
 from django.views.generic import View
@@ -30,11 +30,19 @@ class FolderLogin(View):
     template_name = 'folder/login.html'
 
     def get(self, request):
+        if request.user.is_authenticated():
+            return redirect('/folder/home/')
+
         context = {'FOLDER_SIGNUP_ENABLED': FOLDER_SIGNUP_ENABLED}
         context.update(csrf(request))
         return render_to_response(self.template_name, context)
 
     def post(self, request):
+        if request.user.is_authenticated():
+            return JsonResponse(
+                {'status': 'OK',
+                 'info': {'username': 'Already authenticated'}})
+
         username = request.POST.get('username', 'EMPTY_USER')
         password = request.POST.get('password', 'EMPTY_PASS')
         user = authenticate(username=username, password=password)
@@ -63,10 +71,16 @@ class FolderSignup(View):
 
     def get(self, request):
         if FOLDER_SIGNUP_ENABLED:
+            if request.user.is_authenticated():
+                return redirect('/folder/home/')
             return render(request, self.template_name)
         return redirect('/folder/login/')
 
     def post(self, request):
+        if request.user.is_authenticated():
+            return JsonResponse({'status': 'OK',
+                                 'info': {'username': 'Already registered'}})
+
         form = FolderUserCreationFrom(request.POST)
         if form.is_valid():
             new_user = form.save()
@@ -228,7 +242,7 @@ class FolderAnonymousGetSharedLink(View):
         try:
             shared_link = FileSharedLink.objects.get(name=name)
         except FileLink.DoesNotExists:
-            return HttpResponse('404 File not found!')
+            return HttpResponseNotFound('404 File not found!')
 
         file_link = shared_link.filelink
 
