@@ -53,8 +53,10 @@ def handle_uploaded_file(f, user):
 
     md5sum = hashlib.md5()
     with open(tmp_filename, 'rb') as tmp_f:
-        for chunk in tmp_f.read(128):
+        chunk = tmp_f.read(128)
+        while chunk:
             md5sum.update(chunk)
+            chunk = tmp_f.read(128)
 
     owners = {}
     file_md5sum = md5sum.hexdigest()
