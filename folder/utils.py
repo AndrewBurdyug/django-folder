@@ -24,10 +24,12 @@ def dehydrate_validation_errors(errors_data):
     """
 
     dehydrated_output = {}
-
     for key, value in errors_data.items():
-        errors = ", ".join([str(x).lstrip("[u'").rstrip("']") for x in value])
-        dehydrated_output[key] = errors
+        errors = []
+        for i in value:
+            for message in i.messages:
+                errors.append(message)
+        dehydrated_output[key] = ', '.join(errors)
 
     return dehydrated_output
 
