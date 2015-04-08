@@ -4,11 +4,16 @@
             <a class="navbar-brand" href="#">Django Folder</a>
         </div>
         <div class="nav navbar-nav">
-               <a id="profile_name" class="navbar-brand" href="#profile"><i class="fa fa-user fa-fw"></i> {{user}}</a>
-               {% if files %}
-               <a id="header_upload_btn" class="navbar-brand" href="#"><i class="fa fa-cloud-upload fa-fw"></i> Загрузить Файл</a>
-               {% endif %}
+            <a id="profile_name" class="navbar-brand" href="#profile"><i class="fa fa-user fa-fw"></i> {{user}}</a>
         </div>
+        {% if files %}
+        <div class="nav navbar-nav navbar-center">
+            <a id="header_upload_btn" class="navbar-brand" href="#"><i class="fa fa-cloud-upload fa-fw"></i> Загрузить Файл</a>
+            <a id="header_change_view_table_btn" class="navbar-brand" href="#"><i class="fa fa-align-justify fa-fw"></i> Показать таблицей</a>
+            <a id="header_change_view_star_btn" class="navbar-brand" href="#"><i class="fa fa-star fa-fw"></i> Показать избранное</a>
+            <a id="header_change_view_folders_btn" class="navbar-brand" href="#"><i class="fa fa-folder fa-fw"></i> Показать папки</a>
+        </div>
+        {% endif %}
         <div class="nav navbar-nav navbar-right">
             <form id="quit" class="navbar-form" action="/folder/logout">
                 <button type="submit" class="btn btn-default">Выход</button>
