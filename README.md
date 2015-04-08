@@ -232,7 +232,7 @@ User = django_user
 User = django_group
 PIDFile = /tmp/uwsgi-your_django_porject_dir.pid
 WorkingDirectory = /full/path/to/your_django_porject_dir
-ExecStart = /usr/bin/bash -c '. ../py2/bin/activate && uwsgi --ini uwsgi.ini'
+ExecStart = /usr/bin/bash -c '. py2/bin/activate && uwsgi --ini uwsgi.ini'
 ExecStop = /usr/bin/kill -INT $MAINPID
 ExecReload = /usr/bin/kill -TERM $MAINPID
 RemainAfterExit = yes
@@ -256,19 +256,14 @@ server {
     listen 80;
     server_name your_domain_name;
 
+    error_page 404 =200 /static/404.html;
+
     access_log /var/log/nginx/your_domain_name.access.log;
     error_log /var/log/nginx/your_domain_name.error.log info;
 
     charset utf-8;
     client_max_body_size 8m;
-
-    gzip on;
-    gzip_vary on;
-    gzip_disable "msie6";
-    gzip_comp_level 6;
-    gzip_buffers 16 8k;
-    gzip_http_version 1.1;
-    gzip_types text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
+    keepalive_timeout 75s;
 
     location = /favicon.ico {
         return 200;
@@ -278,13 +273,20 @@ server {
         uwsgi_pass unix:/tmp/uwsgi-your-django-project.sock;
         include uwsgi_params;
         uwsgi_param Host $host;
+        uwsgi_intercept_errors on;
     }
 
     location /static/ {
-        alias /full/path/to/your_django_porject/static/dir/;
+        aio on;
         etag on;
+        sendfile on;
+        directio 10k;
         gzip_static on;
+        tcp_nopush  on;
+        tcp_nodelay on;
+        alias /full/path/to/your_django_porject/static/dir/;
         add_header Cache-Control "max-age=864000, must-revalidate";
+        add_header Vary "Accept-Encoding";
     }
 
     location /media/ {
