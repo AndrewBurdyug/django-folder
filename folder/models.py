@@ -34,6 +34,9 @@ class FileLink(models.Model):
                               related_name='files')
     shared = models.OneToOneField('FileSharedLink', related_name='filelink',
                                   blank=True, null=True)
+    directory = models.ForeignKey('Directory', related_name='filelinks',
+                                  blank=True, null=True)
+    star = models.NullBooleanField()
 
     def __unicode__(self):
         return 'Name: %s, Created: %s, Size: %d bytes' % (
@@ -54,6 +57,15 @@ class FileSharedLink(models.Model):
     """Anonymous shared link to user file"""
 
     name = models.CharField(max_length=10, unique=True, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Directory(models.Model):
+    """Directory of file"""
+
+    name = models.CharField(max_length=64, db_index=True)
 
     def __unicode__(self):
         return self.name
