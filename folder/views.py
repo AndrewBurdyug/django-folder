@@ -13,7 +13,7 @@ from folder.forms import FolderUserCreationFrom, UploadFileForm
 from folder.utils import dehydrate_validation_errors, handle_uploaded_file, \
     generate_random_phrase
 from folder.errors import BadFileSize, TooMuchFiles
-from folder.models import FileLink, FileSharedLink
+from folder.models import FileLink, FileSharedLink, Directory
 
 FOLDER_SIGNUP_ENABLED = True
 if hasattr(settings, 'FOLDER_SIGNUP_ENABLED'):
@@ -98,13 +98,37 @@ class FolderSignup(View):
 class FolderHome(View):
     template_name = 'folder/home.html'
 
-    def get(self, request, extra_context={}):
+    def get(self, request, mode='default', dir_pk=None):
+
         form = UploadFileForm()
-        context = {'form': form, 'user': request.user,
-                   'files': FileLink.objects.filter(owner=request.user)}
+        context = {'form': form, 'user': request.user, 'mode': mode}
         context.update(csrf(request))
-        if extra_context:
-            context.update(extra_context)
+
+        files = FileLink.objects.filter(owner=request.user)
+
+        if mode == 'list':
+            if not files:
+                return redirect('/folder/home/')
+
+        if mode == 'stars':
+            if not files:
+                return redirect('/folder/home/')
+            files = files.filter(star=True)
+
+        if mode == 'dirs':
+            if not files:
+                return redirect('/folder/home/')
+            dirs = Directory.objects.filter(owner=request.user)
+            star_files = files.filter(star=True)
+            context.update({'dirs': dirs, 'star_files': star_files})
+
+        if mode == 'files_in_dir':
+            if not files:
+                return redirect('/folder/home/')
+            if dir_pk is not None:
+                files = files.filter(directory=dir_pk)
+
+        context.update({'files': files})
         return render_to_response(self.template_name, context)
 
     def post(self, request):

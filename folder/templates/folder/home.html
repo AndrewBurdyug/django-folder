@@ -6,60 +6,106 @@
 
 {% block "content" %}
 
-{% if not files %}
 
-<div id="greeting" class="col-sm-4 col-sm-offset-4">
-    <p class="lead text-center">Привет, {{user}}!</p>
-    <p class="lead text-center">У Вас нет ни одного загруженного файла!</p>
-    <p class="text-center">
-        <button id="center_upload_btn" type="submit" class="btn btn-primary btn-lg btn-block">
-            <i class="fa fa-cloud-upload fa-2x fa-fw"></i><h4>Загрузить Файл</h4>
-        </button>
-    </p>
-</div>
-
-{% else %}
-
-{% for file in files %}
-    <div class="col-sm-3 col-md-2">
-        <div class="thumbnail">
-          <div class="caption text-left">
-            {% if "pdf" in file.target.content_type.name %}
-            <i class="fa fa-file-pdf-o fa-2x"></i>
-            {% elif "image" in file.target.content_type.name %}
-            <i class="fa fa-file-image-o fa-2x"></i>
-            {% elif "zip" in file.target.content_type.name or "compressed" in file.target.content_type.name %}
-            <i class="fa fa-file-archive-o fa-2x"></i>
-            {% elif "text" in file.target.content_type.name %}
-            <i class="fa fa-file-text-o fa-2x"></i>
-            {% elif "word" in file.target.content_type.name %}
-            <i class="fa fa-file-word-o fa-2x"></i>
-            {% elif "spreadsheet" in file.target.content_type.name or "excel" in file.target.content_type.name %}
-            <i class="fa fa-file-excel-o fa-2x"></i>
-            {% elif "powerpoint" in file.target.content_type.name %}
-            <i class="fa fa-file-powerpoint-o fa-2x"></i>
-            {% elif "audio" in file.target.content_type.name %}
-            <i class="fa fa-file-audio-o fa-2x"></i>
-            {% elif "video" in file.target.content_type.name %}
-            <i class="fa fa-file-video-o fa-2x"></i>
-            {% else %}
-            <i class="fa fa-file-o fa-2x"></i>
+{% if mode == "default" or mode == "stars" %}
+    {% if files %}
+        {% for file in files %}
+            <div class="col-sm-3 col-md-2">
+                <div class="thumbnail">
+                  <div class="caption text-left">
+                    {% if "pdf" in file.target.content_type.name %}
+                    <i class="fa fa-file-pdf-o fa-2x"></i>
+                    {% elif "image" in file.target.content_type.name %}
+                    <i class="fa fa-file-image-o fa-2x"></i>
+                    {% elif "zip" in file.target.content_type.name or "compressed" in file.target.content_type.name %}
+                    <i class="fa fa-file-archive-o fa-2x"></i>
+                    {% elif "text" in file.target.content_type.name %}
+                    <i class="fa fa-file-text-o fa-2x"></i>
+                    {% elif "word" in file.target.content_type.name %}
+                    <i class="fa fa-file-word-o fa-2x"></i>
+                    {% elif "spreadsheet" in file.target.content_type.name or "excel" in file.target.content_type.name %}
+                    <i class="fa fa-file-excel-o fa-2x"></i>
+                    {% elif "powerpoint" in file.target.content_type.name %}
+                    <i class="fa fa-file-powerpoint-o fa-2x"></i>
+                    {% elif "audio" in file.target.content_type.name %}
+                    <i class="fa fa-file-audio-o fa-2x"></i>
+                    {% elif "video" in file.target.content_type.name %}
+                    <i class="fa fa-file-video-o fa-2x"></i>
+                    {% else %}
+                    <i class="fa fa-file-o fa-2x"></i>
+                    {% endif %}
+                    <a name="{{file.pk}}" href="#" class="folder_file"><i class="fa fa-folder-o pull-right fa-border"></i></a>
+                    <a name="{{file.pk}}" href="#" class="star_file"><i class="fa fa-star-o pull-right fa-border"></i></a>
+                    <a name="{{file.pk}}" href="#" class="rename_file"><i class="fa fa-edit pull-right fa-border"></i></a>
+                    <h3>{{file.name|truncatechars:16}}</h3>
+                    <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
+                    <p id='file_shared_link_op_{{file.pk}}' class='file_shared_link_operations'>{% if file.shared %}Ссылка: <a href="/folder/shared/{{file.shared}}"><small>{{file.name|truncatechars:16}}</small></a><a href="#" name="{{file.pk}}" class="delete_shared_link"><i class="fa fa-trash-o fa-fw"></i></a>{% else %}<a href="#" name="{{file.pk}}" class="create_shared_link"><i class="fa fa-link fa-fw"></i> Создать ссылку</a>{% endif %}</p>
+                    <p>
+                        <a href="/folder/download/{{file.pk}}" class="btn btn-default download_file" role="button" name="{{file.pk}}">Скачать</a>
+                        <a href="/folder/delete/{{file.pk}}" class="btn btn-danger delete_file" role="button" name="{{file.name}}">Удалить</a>
+                    </p>
+                  </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% if mode == "default" %}
+            <div id="greeting" class="col-sm-4 col-sm-offset-4">
+                <p class="lead text-center">Привет, {{user}}!</p>
+                <p class="lead text-center">У Вас нет ни одного загруженного файла!</p>
+                <p class="text-center">
+                    <button id="center_upload_btn" type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fa fa-cloud-upload fa-2x fa-fw"></i><h4>Загрузить Файл</h4>
+                    </button>
+                </p>
+            </div>
+        {% else %}
+            <div id="greeting" class="col-sm-4 col-sm-offset-4">
+            {% if mode == "stars" %}
+                <p class="lead text-center">У Вас нет файлов в папке "Избранное"!</p>
             {% endif %}
-            <a name="{{file.pk}}" href="#" class="folder_file"><i class="fa fa-folder-o pull-right fa-border"></i></a>
-            <a name="{{file.pk}}" href="#" class="star_file"><i class="fa fa-star-o pull-right fa-border"></i></a>
-            <a name="{{file.pk}}" href="#" class="rename_file"><i class="fa fa-edit pull-right fa-border"></i></a>
-            <h3>{{file.name|truncatechars:16}}</h3>
-            <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
-            <p id='file_shared_link_op_{{file.pk}}' class='file_shared_link_operations'>{% if file.shared %}Ссылка: <a href="/folder/shared/{{file.shared}}"><small>{{file.name|truncatechars:16}}</small></a><a href="#" name="{{file.pk}}" class="delete_shared_link"><i class="fa fa-trash-o fa-fw"></i></a>{% else %}<a href="#" name="{{file.pk}}" class="create_shared_link"><i class="fa fa-link fa-fw"></i> Создать ссылку</a>{% endif %}</p>
-            <p>
-                <a href="/folder/download/{{file.pk}}" class="btn btn-default download_file" role="button" name="{{file.pk}}">Скачать</a>
-                <a href="/folder/delete/{{file.pk}}" class="btn btn-danger delete_file" role="button" name="{{file.name}}">Удалить</a>
-            </p>
-          </div>
-        </div>
-    </div>
-{% endfor %}
+            {% if mode == "dirs" %}
+                <p class="lead text-center">У Вас нет директорий!</p>
+                <p class="lead text-center">Используйте иконку директории на файле чтобы переместить его в папку!</p>
+            {% endif %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
 
+{% if mode == "dirs" %}
+    {% if dirs %}
+        {% for dir in dirs %}
+        <div class="col-sm-3 col-md-2">
+            <div class="thumbnail">
+                <div class="caption text-left">
+                    <i class="fa fa-folder-o fa-5x"></i>
+                    <a href="/folder/home/files_in_dir/{{dir.pk}}"><h3>{{dir.name|truncatechars:16}}</h3></a>
+                    <p>Число файлов: {{dir.filelinks.count}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-sm-3 col-md-2">
+            <div class="thumbnail">
+                <div class="caption text-left">
+                    <i class="fa fa-folder-o fa-5x"></i>
+                    <a href="/folder/home/"><h3>Неразобранное</h3></a>
+                    <p>Число файлов: {{files.count}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-md-2">
+            <div class="thumbnail">
+                <div class="caption text-left">
+                    <i class="fa fa-folder-o fa-5x"></i>
+                    <a href="/folder/home/stars/"><h3>Избранное</h3></a>
+                    <p>Число файлов: {{star_files.count}}</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% include "folder/upload.html" %}

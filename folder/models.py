@@ -66,6 +66,8 @@ class Directory(models.Model):
     """Directory of file"""
 
     name = models.CharField(max_length=64, db_index=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              related_name='directories')
 
     def __unicode__(self):
         return self.name
