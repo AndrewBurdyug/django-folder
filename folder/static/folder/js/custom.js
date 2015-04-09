@@ -77,6 +77,9 @@ var send_data = function(service_type, data){
                 $('#file_toggle_star_op_' + backend_response.info.file_link_id).html(
                     '<i class="fa ' + icon + ' pull-right fa-border"></i>'
                 );
+                if (window.location.pathname.match(/\/stars|unsorted/)){
+                    location.reload();
+                }
             } else {
                 if (service_ok_urls[service_type]) {
                     home_url = window.location.origin + service_ok_urls[service_type];

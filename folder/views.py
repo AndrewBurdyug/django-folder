@@ -115,11 +115,17 @@ class FolderHome(View):
                 return redirect('/folder/home/')
             files = files.filter(star=True)
 
+        if mode == 'unsorted':
+            if not files:
+                return redirect('/folder/home/')
+            files = files.filter(star=False)
+
         if mode == 'dirs':
             if not files:
                 return redirect('/folder/home/')
             dirs = Directory.objects.filter(owner=request.user)
             star_files = files.filter(star=True)
+            files = files.filter(star=False)
             context.update({'dirs': dirs, 'star_files': star_files})
 
         if mode == 'files_in_dir':

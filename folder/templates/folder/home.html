@@ -7,7 +7,7 @@
 {% block "content" %}
 
 
-{% if mode == "default" or mode == "stars" %}
+{% if mode == "default" or mode == "stars" or mode == "unsorted" %}
     {% if files %}
         {% for file in files %}
             <div class="col-sm-3 col-md-2">
@@ -61,13 +61,7 @@
             </div>
         {% else %}
             <div id="greeting" class="col-sm-4 col-sm-offset-4">
-            {% if mode == "stars" %}
-                <p class="lead text-center">У Вас нет файлов в папке "Избранное"!</p>
-            {% endif %}
-            {% if mode == "dirs" %}
-                <p class="lead text-center">У Вас нет директорий!</p>
-                <p class="lead text-center">Используйте иконку директории на файле чтобы переместить его в папку!</p>
-            {% endif %}
+                <p class="lead text-center">У Вас нет файлов в папке {% if mode == "stars" %}"Избранное"{% elif mode == "unsorted" %}"Неразобранное"{% endif %}!</p>
             </div>
         {% endif %}
     {% endif %}
@@ -91,7 +85,7 @@
             <div class="thumbnail">
                 <div class="caption text-left">
                     <i class="fa fa-folder-o fa-5x"></i>
-                    <a href="/folder/home/"><h3>Неразобранное</h3></a>
+                    <a href="/folder/home/unsorted/"><h3>Неразобранное</h3></a>
                     <p>Число файлов: {{files.count}}</p>
                 </div>
             </div>
