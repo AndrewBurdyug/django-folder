@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from folder.views import FolderLogin, FolderLogout, FolderSignup, FolderHome, \
     FolderDeleteFile, FolderGetFile, FolderCreateSharedLink, \
-    FolderDeleteSharedLink, FolderAnonymousGetSharedLink
+    FolderDeleteSharedLink, FolderAnonymousGetSharedLink, FolderToggleStar
 
 urlpatterns = [
     url(r'^signup/$', FolderSignup.as_view()),
@@ -19,4 +19,6 @@ urlpatterns = [
         login_required(FolderDeleteSharedLink.as_view())),
     url(r'^shared/(?P<name>[a-zA-Z]{10})$',
         FolderAnonymousGetSharedLink.as_view()),
+    url(r'^toggle_star/(?P<pk>\d+)$',
+        login_required(FolderToggleStar.as_view())),
 ]

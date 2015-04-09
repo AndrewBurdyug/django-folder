@@ -283,3 +283,25 @@ class FolderAnonymousGetSharedLink(View):
             response['Content-Disposition'] = 'filename="%s"' % \
                 file_name
             return response
+
+
+class FolderToggleStar(View):
+
+    def get(self, request, pk):
+        try:
+            file_link = FileLink.objects.get(owner=request.user, pk=pk)
+        except FileLink.DoesNotExists:
+            return JsonResponse({'status': 'WARNING',
+                                 'info': {'file_link': 'Not found'}})
+        if file_link.star:
+            file_link.star = False
+            file_link.save()
+            return JsonResponse({'status': 'OK',
+                                 'info': {'star': file_link.star,
+                                          'file_link_id': file_link.pk}})
+        if not file_link.star:
+            file_link.star = True
+            file_link.save()
+            return JsonResponse({'status': 'OK',
+                                 'info': {'star': file_link.star,
+                                          'file_link_id': file_link.pk}})

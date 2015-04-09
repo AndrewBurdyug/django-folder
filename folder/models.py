@@ -36,7 +36,7 @@ class FileLink(models.Model):
                                   blank=True, null=True)
     directory = models.ForeignKey('Directory', related_name='filelinks',
                                   blank=True, null=True)
-    star = models.NullBooleanField()
+    star = models.BooleanField(default=False)
 
     def __unicode__(self):
         return 'Name: %s, Created: %s, Size: %d bytes' % (

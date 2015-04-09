@@ -15,7 +15,8 @@ var service_ok_urls = {
     'home': '/folder/home/',
     'delete': '/folder/home/',
     'delete_shared_link': '',
-    'create_shared_link': ''
+    'create_shared_link': '',
+    'toggle_star': '',
 }
 
 var format_error_msg = function(data){
@@ -70,6 +71,11 @@ var send_data = function(service_type, data){
             } else if (service_type == 'create_shared_link'){
                 $('#file_shared_link_op_' + backend_response.info.file_link_id).html(
                     'Ссылка: <a href="/folder/shared/' + backend_response.info.shared_link + '"><small>' + backend_response.info.file_link_name + '</small></a><a href="#" name="' + backend_response.info.file_link_id + '" class="delete_shared_link"><i class="fa fa-trash-o fa-fw"></i></a>'
+                );
+            } else if (service_type == 'toggle_star'){
+                var icon = backend_response.info.star == true ? 'fa-star' : 'fa-star-o';
+                $('#file_toggle_star_op_' + backend_response.info.file_link_id).html(
+                    '<i class="fa ' + icon + ' pull-right fa-border"></i>'
                 );
             } else {
                 if (service_ok_urls[service_type]) {
@@ -196,6 +202,15 @@ $(function() {
         create_url = '/folder/create_shared_link/' + elem.attr('name');
         $.extend(ajax_extra_options, {'url': create_url, 'method': 'GET', 'async': false});
         send_data('create_shared_link', {});
+        ajax_extra_options = {};
+    });
+
+    $('.file_operations').on('click', '.star_file', function(event){
+        event.preventDefault();
+        var elem = $(this);
+        toggle_star_url = '/folder/toggle_star/' + elem.attr('name');
+        $.extend(ajax_extra_options, {'url': toggle_star_url, 'method': 'GET'});
+        send_data('toggle_star', {});
         ajax_extra_options = {};
     });
 });

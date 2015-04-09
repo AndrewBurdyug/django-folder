@@ -12,7 +12,7 @@
         {% for file in files %}
             <div class="col-sm-3 col-md-2">
                 <div class="thumbnail">
-                  <div class="caption text-left">
+                  <div class="caption text-left file_operations">
                     {% if "pdf" in file.target.content_type.name %}
                     <i class="fa fa-file-pdf-o fa-2x"></i>
                     {% elif "image" in file.target.content_type.name %}
@@ -35,7 +35,7 @@
                     <i class="fa fa-file-o fa-2x"></i>
                     {% endif %}
                     <a name="{{file.pk}}" href="#" class="folder_file"><i class="fa fa-folder-o pull-right fa-border"></i></a>
-                    <a name="{{file.pk}}" href="#" class="star_file"><i class="fa fa-star-o pull-right fa-border"></i></a>
+                    <a id="file_toggle_star_op_{{file.pk}}" name="{{file.pk}}" href="#" class="star_file"><i class="fa {% if file.star %}fa-star{% else %}fa-star-o{% endif %} pull-right fa-border"></i></a>
                     <a name="{{file.pk}}" href="#" class="rename_file"><i class="fa fa-edit pull-right fa-border"></i></a>
                     <h3>{{file.name|truncatechars:16}}</h3>
                     <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
