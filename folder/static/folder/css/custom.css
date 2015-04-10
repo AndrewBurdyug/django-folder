@@ -33,3 +33,20 @@ body > .container {
 #greeting {
     padding-top: 10%;
 }
+
+.vcenter {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.shift-top {
+   margin-top: -8px;
+   margin-left: 4px;
+   font-weight: bold;
+   font-size: larger;
+}
+
+.shift-bottom{
+   margin-top: 1px;
+   margin-left: -2px;
+}
