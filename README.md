@@ -29,16 +29,15 @@ python 2.7, django>=1.7.4,<1.8
 __Build on__:
 
 - backend:
-    -- Python 2.7
-    -- Django 1.7
-    -- uWSGI 2.0
-    -- any DB which supported by Django ORM
+    - Python 2.7
+    - Django 1.7.4
+    - any DB which supported by Django ORM
 
 - frontend:
-    -- jQuery 1.11.2
-    -- Bootstrap 3.3.4
-    -- PNotify 2.0.1
-    -- Font Awesome 4.3.0
+    - jQuery 1.11.2
+    - Bootstrap 3.3.4
+    - PNotify 2.0.1
+    - Font Awesome 4.3.0
 
 __Setup virtual enviroment__:
 
@@ -46,18 +45,10 @@ __Setup virtual enviroment__:
 $ sudo apt-get install python python-dev python-virtualenv git
 $ virtualenv ~/py2
 $ . ~/py2/bin/activate
-$ pip install -U setuptools argparse pip
+$ pip install -U setuptools pip
 ```
 
 __Install Django addon django_folder__:
-
-```shell
-$ . ~/py2/bin/activate
-$ git clone http://gitlab.chalenge.tk/asdco/django_folder.git
-$ cd django_folder && python setup.py install
-```
-
-or if you do not have git:
 
 ```shell
 $ . ~/py2/bin/activate
