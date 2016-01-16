@@ -1,6 +1,5 @@
-class BadFileSize(BaseException):
+class BadFileSize(Exception):
     def __init__(self, filename, size, limit):
-        BaseException.__init__(self)
         self.filename = filename
         self.size = size
         self.limit = limit
@@ -10,9 +9,8 @@ class BadFileSize(BaseException):
             self.filename, self.size, self.limit)
 
 
-class TooMuchFiles(BaseException):
+class TooMuchFiles(Exception):
     def __init__(self, total_files, limit):
-        BaseException.__init__(self)
         self.total_files = total_files
         self.limit = limit
 
