@@ -15,7 +15,7 @@ setup(
         'uwsgi'
     ],
     include_package_data=True,
-    license='Apach 2.0 License',
+    license='Apache 2.0 License',
     description='A simple Django folder app',
     long_description=README,
     url='http://www.example.com/',
