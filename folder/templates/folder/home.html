@@ -38,7 +38,7 @@
                     <a id="file_toggle_star_op_{{file.pk}}" name="{{file.pk}}" href="#" class="star_file"><i class="fa {% if file.star %}fa-star{% else %}fa-star-o{% endif %} pull-right fa-border"></i></a>
                     <a name="{{file.pk}}" href="#" class="rename_file"><i class="fa fa-edit pull-right fa-border"></i></a>
                     <h3>{{file.name|truncatechars:16}}</h3>
-                    <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size}} байт</p>
+                    <p>Создан: {{file.created|date:"d.m.Y H:i"}}, Размер: {{file.target.size|filesizeformat}}</p>
                     <p id='file_shared_link_op_{{file.pk}}' class='file_shared_link_operations'>{% if file.shared %}Ссылка: <a href="/folder/shared/{{file.shared}}"><small>{{file.name|truncatechars:16}}</small></a><a href="#" name="{{file.pk}}" class="delete_shared_link"><i class="fa fa-trash-o fa-fw"></i></a>{% else %}<a href="#" name="{{file.pk}}" class="create_shared_link"><i class="fa fa-link fa-fw"></i> Создать ссылку</a>{% endif %}</p>
                     <p>
                         <a href="/folder/download/{{file.pk}}" class="btn btn-default download_file" role="button" name="{{file.pk}}">Скачать</a>
